@@ -1,5 +1,33 @@
+let playerPoints = 0;
+let computerPoints = 0; 
+const playerScore = document.getElementById('playerScore');
+const rock_selection = document.getElementById("rock");
+const paper_selection = document.getElementById('paper');
+const scissors_selection = document.getElementById('scissors');
+const result = document.getElementById('result');
+const computerScore = document.getElementById('computerScore');
+function playerRock () {
+    game("ROCK");
+}
+
+function playerPaper () {
+    game("PAPER");
+}
+
+function playerScissors () {
+    game("SCISSORS");
+}
+
+
+
+rock_selection.addEventListener('click', playerRock);
+
+paper_selection.addEventListener('click', playerPaper);
+
+scissors_selection.addEventListener('click', playerScissors);
+
 function computerPlay() {
-    let randNumb =  Math.floor(Math.random() * Math.floor(3));
+    let randNumb =  Math.floor(Math.random() * 3);
     if (randNumb == 0) {
         return "ROCK";
     } 
@@ -41,48 +69,45 @@ function playRound(playerSelection, computerSelection) {
                 return 2;       
         }
     }
-    else {
-        return 3;
-        
-    }
 }
 
-function game() {
-    let playerPoints = 0;
-    let computerPoints = 0;
-    let numOfRounds = 1;
-    while (numOfRounds != 6) {
-        let playerSelection = prompt("This is round " + numOfRounds +". The score is Player: " + playerPoints + " vs. Computer: " + 
-        computerPoints + ". Choose rock, paper, or scissors.");
+
+function game(playerSelection) {
         let computerSelection = computerPlay();
         let roundResult = playRound(playerSelection,computerSelection);
         switch (roundResult) {
             case 0:
                 playerPoints++;
-                numOfRounds++;
-                alert(playerSelection + " beats " + computerSelection + ". You win!");
+                playerScore.textContent = 'Player: ' + playerPoints;
+                result.textContent = (playerSelection + " beats " + computerSelection + ".\r\n You win! Choose another move.");
                 break;
             case 1:
-                alert(playerSelection + " loses to " + computerSelection + ". You lose!");
-                numOfRounds++;
                 computerPoints++;
+                result.textContent = (playerSelection + " loses to " + computerSelection + ".\r\n You lose! Choose another move.");
+                computerScore.textContent = 'Computer: ' + computerPoints;
                 break;
             case 2:
-                alert(playerSelection + " ties with " + computerSelection + ". It's a tie!");
-                numOfRounds++;
-                break;
-            case 3:
-                alert("Please choose a valid action.");
+                result.textContent = (playerSelection + " ties with " + computerSelection + ".\r\n It's a tie! Choose another move.");
+                    break;
+        }
+    if (playerPoints == 5 || computerPoints == 5) {
+        if (playerPoints > computerPoints) {
+            result.textContent = ("YOU WIN! The score was " + playerPoints + " vs. " + computerPoints + "\r\nClick here to play again.");
+            rock_selection.removeEventListener('click', playerRock);
+            paper_selection.removeEventListener('click', playerPaper);
+            scissors_selection.removeEventListener('click',playerScissors);
+            result.addEventListener('click' , function(e) {
+                location.reload();
+            })
+        }
+        else if (playerPoints < computerPoints) {
+            result.textContent = ("COMPUTER WINS! The score was " + playerPoints + " vs. " + computerPoints + "\r\nClick here to play again.");
+            rock_selection.removeEventListener('click', playerRock);
+            paper_selection.removeEventListener('click', playerPaper);
+            scissors_selection.removeEventListener('click',playerScissors);
+            result.addEventListener('click' , function(e) {
+                location.reload();
+            })
         }
     }
-    if (playerPoints > computerPoints) {
-        alert("YOU WIN! The score was " + playerPoints + " vs. " + computerPoints);
-    }
-    else if (playerPoints < computerPoints) {
-        alert("COMPUTER WINS! The score was " + playerPoints + " vs. " + computerPoints);
-    }
-    else {
-        alert("TIE! The score was " + playerPoints + " vs. " + computerPoints);
-    }
 }
-game();
